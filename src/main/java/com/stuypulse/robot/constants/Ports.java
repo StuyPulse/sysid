@@ -15,6 +15,10 @@ public interface Ports {
         int DEBUGGER = 2;
     }
 
+    public interface Flywheel {
+        int MOTOR = 0;
+    }
+
     public interface Swerve {
         public interface BackLeft {
             int DRIVE = 10;

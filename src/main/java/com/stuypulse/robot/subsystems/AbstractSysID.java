@@ -8,6 +8,7 @@ package com.stuypulse.robot.subsystems;
 
 import static com.stuypulse.robot.constants.Settings.Routine.*;
 
+import com.stuypulse.robot.subsystems.flywheel.FlywheelSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveDriveSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveTurnSysID;
 
@@ -25,6 +26,9 @@ public abstract class AbstractSysID extends SubsystemBase {
                 break;
             case SWERVE_TURN:
                 instance = new SwerveTurnSysID();
+                break;
+            case FLYWHEEL:
+                instance = new FlywheelSysID();
                 break;
             default:
                 instance = null;

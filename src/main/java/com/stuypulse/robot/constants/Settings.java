@@ -25,10 +25,11 @@ public interface Settings {
     public interface Routine {
         public enum Mechanism {
             SWERVE_TURN,
-            SWERVE_DRIVE
+            SWERVE_DRIVE,
+            FLYWHEEL
         }
 
-        public Mechanism ROUTINE = Mechanism.SWERVE_TURN;
+        public Mechanism ROUTINE = Mechanism.FLYWHEEL;
     }
 
     public interface Swerve {
