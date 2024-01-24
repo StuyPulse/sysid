@@ -1,15 +1,18 @@
-/************************ PROJECT PHIL ************************/
-/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved.*/
-/* This work is licensed under the terms of the MIT license.  */
-/**************************************************************/
+/************************ PROJECT SYSID ************************/
+/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 
 package com.stuypulse.robot.constants;
+
+import static com.revrobotics.CANSparkMax.IdleMode;
+
+import com.revrobotics.CANSparkMax;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import com.revrobotics.CANSparkMax;
-import static com.revrobotics.CANSparkMax.IdleMode;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -23,7 +26,6 @@ import static com.revrobotics.CANSparkMax.IdleMode;
 public interface Motors {
 
     /** Classes to store all of the values a motor needs */
-
     public static class TalonSRXConfig {
         public final boolean INVERTED;
         public final NeutralMode NEUTRAL_MODE;
@@ -65,10 +67,7 @@ public interface Motors {
         public final NeutralMode NEUTRAL_MODE;
         public final double OPEN_LOOP_RAMP_RATE;
 
-        public VictorSPXConfig(
-                boolean inverted,
-                NeutralMode neutralMode,
-                double openLoopRampRate) {
+        public VictorSPXConfig(boolean inverted, NeutralMode neutralMode, double openLoopRampRate) {
             this.INVERTED = inverted;
             this.NEUTRAL_MODE = neutralMode;
             this.OPEN_LOOP_RAMP_RATE = openLoopRampRate;
@@ -116,7 +115,6 @@ public interface Motors {
             motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
             motor.setOpenLoopRampRate(OPEN_LOOP_RAMP_RATE);
             motor.burnFlash();
-         }
-          
-     }
+        }
+    }
 }
