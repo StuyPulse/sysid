@@ -34,8 +34,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
-import com.ctre.phoenix6.hardware.CANcoder;
-
 public class SwerveModule extends SubsystemBase {
 
     private final String id;
