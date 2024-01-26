@@ -26,10 +26,61 @@ public interface Settings {
         public enum Mechanism {
             SWERVE_TURN,
             SWERVE_DRIVE,
-            FLYWHEEL
+            FLYWHEEL,
+            ELEVATOR,
+            SINGLE_JOINTED_ARM,
+            DOUBLE_JOINTED_ARM_JOINT_ONE,
+            DOUBLE_JOINTED_ARM_JOINT_TWO
         }
 
         public Mechanism ROUTINE = Mechanism.FLYWHEEL;
+    }
+    
+    public interface Flywheel {
+        double POSITION_CONVERSION = 1;
+        double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+    }
+
+    public interface Elevator {
+        double POSITION_CONVERSION = 1;
+        double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+    }
+
+    public interface Arm {
+        public interface SingleJointed {
+            double POSITION_CONVERSION = 1;
+            double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+        }
+
+        public interface DoubleJointed {
+            public interface JointOne {
+                double POSITION_CONVERSION = 1;
+                double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+
+                SmartNumber kP = new SmartNumber("Double Jointed/Joint One/kP", 1);
+                SmartNumber kI = new SmartNumber("Double Jointed/Joint One/kI", 0);
+                SmartNumber kD = new SmartNumber("Double Jointed/Joint One/kD", 0);
+
+                SmartNumber kS = new SmartNumber("Double Jointed/Joint One/kS", 0);
+                SmartNumber kV = new SmartNumber("Double Jointed/Joint One/kV", 0);
+                SmartNumber kA = new SmartNumber("Double Jointed/Joint One/kA", 0);
+                SmartNumber kG = new SmartNumber("Double Jointed/Joint One/kG", 0);
+            }
+
+            public interface JointTwo {
+                double POSITION_CONVERSION = 1;
+                double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
+
+                SmartNumber kP = new SmartNumber("Double Jointed/Joint Two/kP", 1);
+                SmartNumber kI = new SmartNumber("Double Jointed/Joint Two/kI", 0);
+                SmartNumber kD = new SmartNumber("Double Jointed/Joint Two/kD", 0);
+
+                SmartNumber kS = new SmartNumber("Double Jointed/Joint Two/kS", 0);
+                SmartNumber kV = new SmartNumber("Double Jointed/Joint Two/kV", 0);
+                SmartNumber kA = new SmartNumber("Double Jointed/Joint Two/kA", 0);
+                SmartNumber kG = new SmartNumber("Double Jointed/Joint One/kG", 0);
+            }
+        }
     }
 
     public interface Swerve {

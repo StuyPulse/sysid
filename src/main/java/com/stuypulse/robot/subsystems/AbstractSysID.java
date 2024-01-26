@@ -8,6 +8,10 @@ package com.stuypulse.robot.subsystems;
 
 import static com.stuypulse.robot.constants.Settings.Routine.*;
 
+import com.stuypulse.robot.subsystems.arm.SingleJointedSysID;
+import com.stuypulse.robot.subsystems.arm.doublejointed.JointOneSysID;
+import com.stuypulse.robot.subsystems.arm.doublejointed.JointTwoSysID;
+import com.stuypulse.robot.subsystems.elevator.ElevatorSysID;
 import com.stuypulse.robot.subsystems.flywheel.FlywheelSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveDriveSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveTurnSysID;
@@ -29,6 +33,18 @@ public abstract class AbstractSysID extends SubsystemBase {
                 break;
             case FLYWHEEL:
                 instance = new FlywheelSysID();
+                break;
+            case ELEVATOR:
+                instance = new ElevatorSysID();
+                break;
+            case SINGLE_JOINTED_ARM:
+                instance = new SingleJointedSysID();
+                break;
+            case DOUBLE_JOINTED_ARM_JOINT_ONE:
+                instance = new JointOneSysID();
+                break;
+            case DOUBLE_JOINTED_ARM_JOINT_TWO:
+                instance = new JointTwoSysID();
                 break;
             default:
                 instance = null;

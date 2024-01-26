@@ -19,6 +19,16 @@ public interface Ports {
         int MOTOR = 0;
     }
 
+    public interface Elevator {
+        int MOTOR = 1;
+        int MOTOR2 = 2;
+    }
+
+    public interface Arm {
+        int JOINT_ONE = 3;
+        int JOINT_TWO = 4;
+    }
+
     public interface Swerve {
         public interface BackLeft {
             int DRIVE = 10;
