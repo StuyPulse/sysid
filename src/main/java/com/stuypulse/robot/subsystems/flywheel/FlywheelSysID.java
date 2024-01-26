@@ -26,8 +26,8 @@ public class FlywheelSysID extends AbstractSysID {
                                 (log) -> {
                                     log.motor(flywheel.getName())
                                             .voltage(Units.Volts.of(flywheel.getVoltage()))
-                                            .linearPosition(Units.Meters.of(flywheel.getPosition()))
-                                            .linearVelocity(Units.MetersPerSecond.of(flywheel.getVelocity()));
+                                            .angularPosition(Units.Radians.of(flywheel.getPosition()))
+                                            .angularVelocity(Units.RadiansPerSecond.of(flywheel.getVelocity()));
                                 },
                                 this));
     }
