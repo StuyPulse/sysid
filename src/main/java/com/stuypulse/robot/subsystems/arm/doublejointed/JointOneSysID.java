@@ -1,3 +1,9 @@
+/************************ PROJECT SYSID ************************/
+/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
+
 package com.stuypulse.robot.subsystems.arm.doublejointed;
 
 import com.stuypulse.robot.subsystems.AbstractSysID;
@@ -26,9 +32,15 @@ public class JointOneSysID extends AbstractSysID {
                                 },
                                 (log) -> {
                                     log.motor(doubleJointed.getName())
-                                            .voltage(Units.Volts.of(doubleJointed.getJointOneVoltage()))
-                                            .angularPosition(Units.Radians.of(doubleJointed.getJointOnePosition()))
-                                            .angularVelocity(Units.RadiansPerSecond.of(doubleJointed.getJointOneVelocity()));
+                                            .voltage(
+                                                    Units.Volts.of(
+                                                            doubleJointed.getJointOneVoltage()))
+                                            .angularPosition(
+                                                    Units.Radians.of(
+                                                            doubleJointed.getJointOnePosition()))
+                                            .angularVelocity(
+                                                    Units.RadiansPerSecond.of(
+                                                            doubleJointed.getJointOneVelocity()));
                                 },
                                 this));
     }

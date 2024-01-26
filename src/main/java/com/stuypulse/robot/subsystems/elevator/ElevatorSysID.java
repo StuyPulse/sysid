@@ -1,3 +1,9 @@
+/************************ PROJECT SYSID ************************/
+/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
+
 package com.stuypulse.robot.subsystems.elevator;
 
 import com.stuypulse.robot.subsystems.AbstractSysID;
@@ -27,7 +33,9 @@ public class ElevatorSysID extends AbstractSysID {
                                     log.motor(elevator.getName())
                                             .voltage(Units.Volts.of(elevator.getVoltage()))
                                             .linearPosition(Units.Meters.of(elevator.getPosition()))
-                                            .linearVelocity(Units.MetersPerSecond.of(elevator.getVelocity()));
+                                            .linearVelocity(
+                                                    Units.MetersPerSecond.of(
+                                                            elevator.getVelocity()));
                                 },
                                 this));
     }

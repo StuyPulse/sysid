@@ -1,13 +1,21 @@
+/************************ PROJECT SYSID ************************/
+/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
+
 package com.stuypulse.robot.subsystems.arm;
+
+import static com.stuypulse.robot.constants.Settings.Arm.SingleJointed.*;
+
+import com.stuypulse.robot.constants.Ports;
+
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.stuypulse.robot.constants.Ports;
-import static com.stuypulse.robot.constants.Settings.Arm.SingleJointed.*;
-
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SingleJointed extends SubsystemBase {
 

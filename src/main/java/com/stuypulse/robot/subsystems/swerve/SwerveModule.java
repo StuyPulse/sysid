@@ -107,13 +107,11 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getTurnVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(
-                turnEncoder.getVelocity() * 60);
+        return Units.rotationsPerMinuteToRadiansPerSecond(turnEncoder.getVelocity() * 60);
     }
 
     public Rotation2d getAngle() {
-        return Rotation2d.fromRotations(turnEncoder.getPosition())
-                .minus(angleOffset);
+        return Rotation2d.fromRotations(turnEncoder.getPosition()).minus(angleOffset);
     }
 
     public SwerveModulePosition getModulePosition() {

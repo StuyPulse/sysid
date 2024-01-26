@@ -1,3 +1,9 @@
+/************************ PROJECT SYSID ************************/
+/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
+
 package com.stuypulse.robot.subsystems.flywheel;
 
 import com.stuypulse.robot.subsystems.AbstractSysID;
@@ -26,8 +32,11 @@ public class FlywheelSysID extends AbstractSysID {
                                 (log) -> {
                                     log.motor(flywheel.getName())
                                             .voltage(Units.Volts.of(flywheel.getVoltage()))
-                                            .angularPosition(Units.Radians.of(flywheel.getPosition()))
-                                            .angularVelocity(Units.RadiansPerSecond.of(flywheel.getVelocity()));
+                                            .angularPosition(
+                                                    Units.Radians.of(flywheel.getPosition()))
+                                            .angularVelocity(
+                                                    Units.RadiansPerSecond.of(
+                                                            flywheel.getVelocity()));
                                 },
                                 this));
     }

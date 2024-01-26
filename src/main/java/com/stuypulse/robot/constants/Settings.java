@@ -35,7 +35,7 @@ public interface Settings {
 
         public Mechanism ROUTINE = Mechanism.FLYWHEEL;
     }
-    
+
     public interface Flywheel {
         double POSITION_CONVERSION = 1;
         double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;

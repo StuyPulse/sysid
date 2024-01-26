@@ -1,15 +1,23 @@
+/************************ PROJECT SYSID ************************/
+/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
+
 package com.stuypulse.robot.subsystems.elevator;
+
+import static com.stuypulse.robot.constants.Settings.Elevator.*;
+
+import com.stuypulse.robot.constants.Ports;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.stuypulse.robot.constants.Ports;
-import static com.stuypulse.robot.constants.Settings.Elevator.*;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
-    
+
     private final CANSparkMax motor;
     private final CANSparkMax motor2;
     private final RelativeEncoder encoder;
