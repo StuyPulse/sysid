@@ -8,6 +8,7 @@ package com.stuypulse.robot.subsystems.swerve;
 
 import static com.stuypulse.robot.constants.Settings.Swerve.*;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
@@ -39,12 +41,13 @@ public class SwerveModule extends SubsystemBase {
     private final String id;
     private final Rotation2d angleOffset;
 
-    private final CANSparkMax driveMotor;
+    private final CANSparkFlex driveMotor;
     private final RelativeEncoder driveEncoder;
     private final Controller driveController;
 
     private final CANSparkMax turnMotor;
     private final RelativeEncoder turnEncoder;
+    private final CANcoder turnAbsoluteEncoder;
     private final AngleController turnController;
 
     private final SmartBoolean driveSysID;
@@ -57,7 +60,7 @@ public class SwerveModule extends SubsystemBase {
         this.id = id;
         this.angleOffset = angleOffset;
 
-        driveMotor = new CANSparkMax(driveID, MotorType.kBrushless);
+        driveMotor = new CANSparkFlex(driveID, MotorType.kBrushless);
         driveMotor.setIdleMode(IdleMode.kBrake);
         driveEncoder = driveMotor.getEncoder();
         driveController =
@@ -68,6 +71,7 @@ public class SwerveModule extends SubsystemBase {
         turnMotor = new CANSparkMax(turnID, MotorType.kBrushless);
         turnMotor.setIdleMode(IdleMode.kBrake);
         turnEncoder = turnMotor.getEncoder();
+        turnAbsoluteEncoder = new CANcoder(encoderID);
         turnController =
                 new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
                         .setSetpointFilter(new ARateLimit(MAX_MODULE_TURN))
@@ -114,7 +118,11 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public Rotation2d getAngle() {
-        return Rotation2d.fromRotations(turnEncoder.getPosition()).minus(angleOffset);
+        return Rotation2d.fromRotations(turnEncoder.getPosition());
+    }
+
+    public Rotation2d getAbsoluteAngle() {
+        return Rotation2d.fromRotations(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()).minus(angleOffset);
     }
 
     public SwerveModulePosition getModulePosition() {
@@ -151,13 +159,13 @@ public class SwerveModule extends SubsystemBase {
 
             if (driveSysID.get()) {
                 setTurnVoltage(
-                        turnController.update(Angle.kZero, Angle.fromRotation2d(getAngle())));
+                        turnController.update(Angle.kZero, Angle.fromRotation2d(getAbsoluteAngle())));
             } else if (turnSysID.get()) {
                 setDriveVoltage(driveController.update(0, getDriveVelocity()));
             }
 
         } else {
-            setTurnVoltage(turnController.update(Angle.kZero, Angle.fromRotation2d(getAngle())));
+            setTurnVoltage(turnController.update(Angle.kZero, Angle.fromRotation2d(getAbsoluteAngle())));
         }
 
         updateTelemetry();
@@ -169,10 +177,10 @@ public class SwerveModule extends SubsystemBase {
                 "Swerve/Modules/" + id + "/Turn Voltage", turnController.getOutput());
         SmartDashboard.putNumber(
                 "Swerve/Modules/" + id + "/Angle Error", turnController.getError().toDegrees());
-        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Angle", getAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Angle", getAbsoluteAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/Modules/" + id + "/Speed", getDriveVelocity());
         SmartDashboard.putNumber(
                 "Swerve/Modules/" + id + "/Raw Encoder Angle",
-                Units.rotationsToDegrees(turnEncoder.getPosition()));
+                Units.rotationsToDegrees(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()));
     }
 }
