@@ -33,6 +33,8 @@ public class Flywheel extends SubsystemBase {
         encoder.setVelocityConversionFactor(VELOCITY_CONVERSION);
 
         voltage = 0;
+
+        motor.burnFlash();
     }
 
     public double getVelocity() {
@@ -49,11 +51,6 @@ public class Flywheel extends SubsystemBase {
 
     public void setVoltage(double voltage) {
         this.voltage = voltage;
-        motor.setVoltage(voltage);
-    }
-
-    @Override
-    public void periodic() {
         motor.setVoltage(voltage);
     }
 }

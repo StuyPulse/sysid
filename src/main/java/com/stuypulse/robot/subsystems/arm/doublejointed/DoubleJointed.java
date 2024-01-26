@@ -68,6 +68,9 @@ public class DoubleJointed extends SubsystemBase {
 
         jointOneRoutine = new SmartBoolean("Double Jointed/Joint One Routine", false);
         jointTwoRoutine = new SmartBoolean("Double Jointed/Joint Two Routine", false);
+
+        jointOne.burnFlash();
+        jointTwo.burnFlash();
     }
 
     public double getJointOneVelocity() {
@@ -112,7 +115,6 @@ public class DoubleJointed extends SubsystemBase {
     @Override
     public void periodic() {
         if (jointOneRoutine.get()) {
-            jointOne.setVoltage(jointOneVoltage);
             jointTwo.setVoltage(
                     jointTwoController.update(
                             Angle.kZero, Angle.fromRadians(getJointTwoPosition())));
@@ -120,7 +122,6 @@ public class DoubleJointed extends SubsystemBase {
             jointOne.setVoltage(
                     jointOneController.update(
                             Angle.k90deg, Angle.fromRadians(getJointOnePosition())));
-            jointTwo.setVoltage(jointTwoVoltage);
         }
     }
 }

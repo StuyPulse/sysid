@@ -37,6 +37,9 @@ public class Elevator extends SubsystemBase {
         encoder.setVelocityConversionFactor(VELOCITY_CONVERSION);
 
         voltage = 0;
+
+        motor.burnFlash();
+        motor2.burnFlash();
     }
 
     public double getVelocity() {
@@ -53,11 +56,6 @@ public class Elevator extends SubsystemBase {
 
     public void setVoltage(double voltage) {
         this.voltage = voltage;
-        motor.setVoltage(voltage);
-    }
-
-    @Override
-    public void periodic() {
         motor.setVoltage(voltage);
     }
 }

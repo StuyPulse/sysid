@@ -86,6 +86,9 @@ public class SwerveModule extends SubsystemBase {
 
         setDriveVoltage(0);
         setTurnVoltage(0);
+
+        driveMotor.burnFlash();
+        turnMotor.burnFlash();
     }
 
     /************************************************/

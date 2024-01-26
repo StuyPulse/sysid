@@ -33,6 +33,8 @@ public class SingleJointed extends SubsystemBase {
         encoder.setVelocityConversionFactor(VELOCITY_CONVERSION);
 
         voltage = 0;
+
+        motor.burnFlash();
     }
 
     public double getVelocity() {
