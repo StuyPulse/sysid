@@ -29,6 +29,13 @@ public interface Ports {
         int JOINT_TWO = 4;
     }
 
+    public interface TankDrive {
+        int FRONT_LEFT_MOTOR = 5;
+        int BACK_LEFT_MOTOR = 6;
+        int FRONT_RIGHT_MOTOR = 7;
+        int BACK_RIGHT_MOTOR = 8;
+    }
+
     public interface Swerve {
         public interface BackLeft {
             int DRIVE = 10;

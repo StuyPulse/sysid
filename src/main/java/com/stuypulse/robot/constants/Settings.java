@@ -26,6 +26,7 @@ public interface Settings {
         public enum Mechanism {
             SWERVE_TURN,
             SWERVE_DRIVE,
+            TANK_DRIVE,
             FLYWHEEL,
             ELEVATOR,
             SINGLE_JOINTED_ARM,
@@ -81,6 +82,11 @@ public interface Settings {
                 SmartNumber kG = new SmartNumber("Double Jointed/Joint One/kG", 0);
             }
         }
+    }
+
+    public interface TankDrive {
+        double POSITION_CONVERSION = 1;
+        double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
     }
 
     public interface Swerve {

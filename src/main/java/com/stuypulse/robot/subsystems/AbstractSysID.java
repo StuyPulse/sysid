@@ -15,6 +15,7 @@ import com.stuypulse.robot.subsystems.elevator.ElevatorSysID;
 import com.stuypulse.robot.subsystems.flywheel.FlywheelSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveDriveSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveTurnSysID;
+import com.stuypulse.robot.subsystems.tank.TankSysID;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,6 +31,9 @@ public abstract class AbstractSysID extends SubsystemBase {
                 break;
             case SWERVE_TURN:
                 instance = new SwerveTurnSysID();
+                break;
+            case TANK_DRIVE:
+                instance = new TankSysID();
                 break;
             case FLYWHEEL:
                 instance = new FlywheelSysID();
