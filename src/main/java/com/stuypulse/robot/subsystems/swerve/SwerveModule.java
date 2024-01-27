@@ -66,7 +66,6 @@ public class SwerveModule extends SubsystemBase {
         driveController =
                 new PIDController(Drive.kP, Drive.kI, Drive.kD)
                         .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
-        ;
 
         turnMotor = new CANSparkMax(turnID, MotorType.kBrushless);
         turnMotor.setIdleMode(IdleMode.kBrake);

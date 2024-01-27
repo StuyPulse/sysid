@@ -34,7 +34,7 @@ public interface Settings {
             DOUBLE_JOINTED_ARM_JOINT_TWO
         }
 
-        public Mechanism ROUTINE = Mechanism.FLYWHEEL;
+        public Mechanism ROUTINE = Mechanism.SWERVE_DRIVE;
     }
 
     public interface Flywheel {
@@ -116,9 +116,9 @@ public interface Settings {
             SmartNumber kI = new SmartNumber("Swerve/Drive/kI", 0.0);
             SmartNumber kD = new SmartNumber("Swerve/Drive/kD", 0.0);
 
-            SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0.36493);
-            SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 2.448);
-            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0.16408);
+            SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0.2021);
+            SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 0.0017542);
+            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0.00013496);
         }
 
         public interface Motion {
@@ -129,25 +129,25 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-153.984375);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-153.632812 + 180);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(149.326172);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(147.919922 + 180);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(71.191406);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(73.125 + 180);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(45.351562);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-2.02184 + 180);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
@@ -157,7 +157,7 @@ public interface Settings {
                 double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
                 double GEAR_RATIO = 1.0 / 6.12;
 
-                double POSITION_CONVERSION = WHEEL_CIRCUMFERENCE * GEAR_RATIO;
+                double POSITION_CONVERSION = WHEEL_CIRCUMFERENCE * GEAR_RATIO / 1000;
                 double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
             }
 

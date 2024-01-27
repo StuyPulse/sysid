@@ -40,25 +40,25 @@ public interface Ports {
         public interface BackLeft {
             int DRIVE = 10;
             int TURN = 11;
-            int ENCODER = 2;
+            int ENCODER = 3;
         }
 
-        public interface BackRight {
+        public interface BackRight { 
             int DRIVE = 12;
             int TURN = 13;
             int ENCODER = 1;
         }
-
-        public interface FrontRight {
+        
+        public interface FrontRight { 
             int DRIVE = 14;
             int TURN = 15;
             int ENCODER = 4;
         }
-
+        
         public interface FrontLeft {
             int DRIVE = 16;
             int TURN = 17;
-            int ENCODER = 3;
+            int ENCODER = 2;
         }
     }
 }
