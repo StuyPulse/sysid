@@ -19,7 +19,6 @@ import com.revrobotics.RelativeEncoder;
 public class Elevator extends SubsystemBase {
 
     private final CANSparkMax motor;
-    private final CANSparkMax motor2;
     private final RelativeEncoder encoder;
 
     private double voltage;
@@ -29,17 +28,12 @@ public class Elevator extends SubsystemBase {
         motor.restoreFactoryDefaults();
         encoder = motor.getEncoder();
 
-        motor2 = new CANSparkMax(Ports.Elevator.MOTOR2, MotorType.kBrushless);
-        motor2.follow(motor);
-        motor2.setInverted(true);
-
         encoder.setPositionConversionFactor(POSITION_CONVERSION);
         encoder.setVelocityConversionFactor(VELOCITY_CONVERSION);
 
         voltage = 0;
 
         motor.burnFlash();
-        motor2.burnFlash();
     }
 
     public double getVelocity() {
