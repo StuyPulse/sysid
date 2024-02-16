@@ -9,7 +9,6 @@ package com.stuypulse.robot;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
-import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.AbstractSysID;
 
@@ -55,7 +54,6 @@ public class RobotContainer {
     /**************/
 
     public void configureAutons() {
-        autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
         autonChooser.addOption("Quasistatic Forward", sysid.quasistaticForward());
         autonChooser.addOption("Quasistatic Reverse", sysid.quasistaticReverse());
         autonChooser.addOption("Dynamic Forward", sysid.dynamicForward());
