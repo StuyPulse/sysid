@@ -34,7 +34,7 @@ public interface Settings {
             DOUBLE_JOINTED_ARM_JOINT_TWO
         }
 
-        public Mechanism ROUTINE = Mechanism.SWERVE_DRIVE;
+        public Mechanism ROUTINE = Mechanism.FLYWHEEL;
     }
 
     public interface Flywheel {

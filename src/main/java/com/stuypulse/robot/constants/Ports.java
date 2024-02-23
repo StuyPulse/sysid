@@ -16,7 +16,7 @@ public interface Ports {
     }
 
     public interface Flywheel {
-        int MOTOR = 20;
+        int MOTOR = 51;
     }
 
     public interface Elevator {
@@ -36,7 +36,7 @@ public interface Ports {
     }
 
     public interface Swerve {
-        public interface FrontRight { 
+        public interface FrontRight {
             int DRIVE = 10;
             int TURN = 11;
             int ENCODER = 1;
@@ -50,13 +50,13 @@ public interface Ports {
 
         public interface BackLeft {
             int DRIVE = 14;
-            int TURN = 15;
+            int TURN = 17;
             int ENCODER = 3;
         }
 
-        public interface BackRight { 
+        public interface BackRight {
             int DRIVE = 16;
-            int TURN = 17;
+            int TURN = 15;
             int ENCODER = 4;
         }
     }

@@ -15,17 +15,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 public class Flywheel extends SubsystemBase {
 
-    private final CANSparkFlex motor;
+    private final CANSparkMax motor;
     private final RelativeEncoder encoder;
 
     private double voltage;
 
     public Flywheel() {
-        motor = new CANSparkFlex(Ports.Flywheel.MOTOR, MotorType.kBrushless);
+        motor = new CANSparkMax(Ports.Flywheel.MOTOR, MotorType.kBrushless);
         motor.restoreFactoryDefaults();
         encoder = motor.getEncoder();
 
@@ -42,7 +43,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     public double getPosition() {
-        return Units.rotationsToRadians(encoder.getPosition());
+        return encoder.getPosition();
     }
 
     public double getVoltage() {
