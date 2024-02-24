@@ -27,7 +27,7 @@ public interface Settings {
             SWERVE_TURN,
             SWERVE_DRIVE,
             TANK_DRIVE,
-            FLYWHEEL,
+            FLYWHEEL,     // must use conversion of 60 in SysID for velocity
             ELEVATOR,
             SINGLE_JOINTED_ARM,
             DOUBLE_JOINTED_ARM_JOINT_ONE,

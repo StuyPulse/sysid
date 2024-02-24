@@ -10,7 +10,6 @@ import static com.stuypulse.robot.constants.Settings.Flywheel.*;
 
 import com.stuypulse.robot.constants.Ports;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -38,11 +37,11 @@ public class Flywheel extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(encoder.getVelocity());
+        return encoder.getVelocity();
     }
 
     public double getPosition() {
-        return Units.rotationsToRadians(encoder.getPosition());
+        return encoder.getPosition();
     }
 
     public double getVoltage() {

@@ -23,22 +23,22 @@ public class FlywheelSysID extends AbstractSysID {
     public FlywheelSysID() {
         this.flywheel = new Flywheel();
         this.flywheelRoutine =
-                new SysIdRoutine(
-                        new SysIdRoutine.Config(),
-                        new SysIdRoutine.Mechanism(
-                                (Measure<Voltage> voltage) -> {
-                                    flywheel.setVoltage(voltage.in(Units.Volts));
-                                },
-                                (log) -> {
-                                    log.motor(flywheel.getName())
-                                            .voltage(Units.Volts.of(flywheel.getVoltage()))
-                                            .angularPosition(
-                                                    Units.Radians.of(flywheel.getPosition()))
-                                            .angularVelocity(
-                                                    Units.RadiansPerSecond.of(
-                                                            flywheel.getVelocity()));
-                                },
-                                this));
+            new SysIdRoutine(
+                new SysIdRoutine.Config(),
+                new SysIdRoutine.Mechanism(
+                    (Measure<Voltage> voltage) -> {
+                        flywheel.setVoltage(voltage.in(Units.Volts));
+                    },
+                    (log) -> {
+                        log.motor(flywheel.getName())
+                            .voltage(Units.Volts.of(flywheel.getVoltage()))
+                            .angularPosition(
+                                Units.Rotations.of(flywheel.getPosition()))
+                            .angularVelocity(
+                                Units.RotationsPerSecond.of(
+                                    flywheel.getVelocity()));
+                    },
+                    this));
     }
 
     @Override
