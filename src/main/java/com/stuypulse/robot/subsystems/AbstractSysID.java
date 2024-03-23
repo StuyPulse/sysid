@@ -13,6 +13,7 @@ import com.stuypulse.robot.subsystems.arm.doublejointed.JointOneSysID;
 import com.stuypulse.robot.subsystems.arm.doublejointed.JointTwoSysID;
 import com.stuypulse.robot.subsystems.elevator.ElevatorSysID;
 import com.stuypulse.robot.subsystems.flywheel.FlywheelSysID;
+import com.stuypulse.robot.subsystems.motor.MotorSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveDriveSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveTurnSysID;
 import com.stuypulse.robot.subsystems.tank.TankSysID;
@@ -49,6 +50,9 @@ public abstract class AbstractSysID extends SubsystemBase {
                 break;
             case DOUBLE_JOINTED_ARM_JOINT_TWO:
                 instance = new JointTwoSysID();
+                break;
+            case MOTOR:
+                instance = new MotorSysID();
                 break;
             default:
                 instance = null;

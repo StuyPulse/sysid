@@ -31,10 +31,11 @@ public interface Settings {
             ELEVATOR,
             SINGLE_JOINTED_ARM,
             DOUBLE_JOINTED_ARM_JOINT_ONE,
-            DOUBLE_JOINTED_ARM_JOINT_TWO
+            DOUBLE_JOINTED_ARM_JOINT_TWO,
+            MOTOR
         }
 
-        public Mechanism ROUTINE = Mechanism.FLYWHEEL;
+        public Mechanism ROUTINE = Mechanism.MOTOR;
     }
 
     public interface Flywheel {
@@ -43,7 +44,11 @@ public interface Settings {
     }
 
     public interface Elevator {
-        double POSITION_CONVERSION = 1;
+        double GEARING = 1.0 / 9.0;
+        double DRUM_RADIUS = Units.inchesToMeters(1.0);
+        double DRUM_CIRCUMFERENCE = DRUM_RADIUS * Math.PI * 2;
+
+        double POSITION_CONVERSION = GEARING * DRUM_CIRCUMFERENCE * 2.0;
         double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
     }
 
@@ -97,9 +102,11 @@ public interface Settings {
         SmartNumber MODULE_VELOCITY_DEADBAND =
                 new SmartNumber("Swerve/Module velocity deadband (m per s)", 0.02);
         SmartNumber MAX_MODULE_SPEED =
-                new SmartNumber("Swerve/Maximum module speed (m per s)", 5.06);
+                new SmartNumber("Swerve/Maximum module speed (m per s)", 5.55);
         SmartNumber MAX_MODULE_TURN =
                 new SmartNumber("Swerve/Maximum module turn (rad per s)", 6.28);
+
+        double WHEEL_DIAMETER = 4;
 
         public interface Turn {
             SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 6.0);
@@ -129,25 +136,25 @@ public interface Settings {
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-153.632812 + 180);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(42.714844);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(147.919922 + 180);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(16.435547);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(73.125 + 180);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-91.406250);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-2.02184 + 180);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(40.253906);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
@@ -157,7 +164,7 @@ public interface Settings {
                 double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
                 double GEAR_RATIO = 1.0 / 6.12;
 
-                double POSITION_CONVERSION = WHEEL_CIRCUMFERENCE * GEAR_RATIO / 1000;
+                double POSITION_CONVERSION = WHEEL_CIRCUMFERENCE * GEAR_RATIO;
                 double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
             }
 
