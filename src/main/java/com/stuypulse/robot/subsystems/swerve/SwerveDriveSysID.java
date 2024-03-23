@@ -10,13 +10,13 @@ import static com.stuypulse.robot.constants.Settings.Swerve.*;
 
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.AbstractSysID;
+import com.stuypulse.utils.SysIdRoutine;
+import com.stuypulse.utils.SysIdRoutine.Direction;
 
+import edu.wpi.first.units.Current;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 public class SwerveDriveSysID extends AbstractSysID {
 
@@ -57,16 +57,17 @@ public class SwerveDriveSysID extends AbstractSysID {
                 new SysIdRoutine(
                         new SysIdRoutine.Config(),
                         new SysIdRoutine.Mechanism(
-                                (Measure<Voltage> voltage) -> {
+                                (Measure<Current> current) -> {
                                     for (SwerveModule module : modules) {
                                         module.setMode(true, false);
-                                        module.setDriveVoltage(voltage.in(Units.Volts));
+                                        module.setDriveCurrent(current.in(Units.Amps));
                                     }
                                 },
                                 (log) -> {
                                     for (SwerveModule module : modules) {
                                         log.motor(module.getID())
                                                 .voltage(Units.Volts.of(module.getDriveVoltage()))
+                                                .current(Units.Amps.of(module.getDriveCurrent()))
                                                 .linearPosition(
                                                         Units.Meters.of(
                                                                 module.getModulePosition()

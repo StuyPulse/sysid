@@ -68,12 +68,12 @@ public class SwerveTurnSysID extends AbstractSysID {
                                         log.motor(module.getID())
                                                 .voltage(Units.Volts.of(module.getTurnVoltage()))
                                                 .angularPosition(
-                                                        Units.Radians.of(
+                                                        Units.Rotations.of(
                                                                 module.getModulePosition()
                                                                         .angle
-                                                                        .getRadians()))
+                                                                        .getRotations()))
                                                 .angularVelocity(
-                                                        Units.RadiansPerSecond.of(
+                                                        Units.RotationsPerSecond.of(
                                                                 module.getTurnVelocity()));
                                     }
                                 },

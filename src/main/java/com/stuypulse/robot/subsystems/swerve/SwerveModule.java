@@ -8,17 +8,18 @@ package com.stuypulse.robot.subsystems.swerve;
 
 import static com.stuypulse.robot.constants.Settings.Swerve.*;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.stuypulse.stuylib.control.Controller;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
-import com.stuypulse.stuylib.control.feedback.PIDController;
-import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.streams.angles.filters.ARateLimit;
-
-import com.stuypulse.robot.constants.Settings.Swerve.Drive;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
@@ -26,13 +27,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Current;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
@@ -41,9 +43,7 @@ public class SwerveModule extends SubsystemBase {
     private final String id;
     private final Rotation2d angleOffset;
 
-    private final CANSparkFlex driveMotor;
-    private final RelativeEncoder driveEncoder;
-    private final Controller driveController;
+    private final TalonFX driveMotor;
 
     private final CANSparkMax turnMotor;
     private final RelativeEncoder turnEncoder;
@@ -53,19 +53,21 @@ public class SwerveModule extends SubsystemBase {
     private final SmartBoolean driveSysID;
     private final SmartBoolean turnSysID;
 
-    private double driveVoltage;
+    private double driveCurrent;
     private double turnVoltage;
+
+    private TorqueCurrentFOC currentFOC;
 
     public SwerveModule(String id, Rotation2d angleOffset, int turnID, int driveID, int encoderID) {
         this.id = id;
         this.angleOffset = angleOffset;
 
-        driveMotor = new CANSparkFlex(driveID, MotorType.kBrushless);
-        driveMotor.setIdleMode(IdleMode.kBrake);
-        driveEncoder = driveMotor.getEncoder();
-        driveController =
-                new PIDController(Drive.kP, Drive.kI, Drive.kD)
-                        .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
+        driveMotor = new TalonFX(driveID);
+        TalonFXConfiguration driveConfig = new TalonFXConfiguration();
+        driveConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        driveConfig.Feedback.SensorToMechanismRatio = 1.0;
+        driveMotor.getConfigurator().apply(driveConfig);
 
         turnMotor = new CANSparkMax(turnID, MotorType.kBrushless);
         turnMotor.setIdleMode(IdleMode.kBrake);
@@ -76,10 +78,6 @@ public class SwerveModule extends SubsystemBase {
                         .setSetpointFilter(new ARateLimit(MAX_MODULE_TURN))
                         .setOutputFilter(x -> -x);
 
-        driveEncoder.setPositionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
-        driveEncoder.setVelocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
-        driveMotor.restoreFactoryDefaults();
-
         turnEncoder.setPositionConversionFactor(Encoder.Turn.POSITION_CONVERSION);
         turnEncoder.setVelocityConversionFactor(Encoder.Turn.VELOCITY_CONVERSION);
         turnMotor.restoreFactoryDefaults();
@@ -88,9 +86,11 @@ public class SwerveModule extends SubsystemBase {
         turnSysID = new SmartBoolean("Swerve/Modules/Config/Turn SysID Enabled", false);
 
         setDriveVoltage(0);
+        setDriveCurrent(0);
         setTurnVoltage(0);
 
-        driveMotor.burnFlash();
+        currentFOC = new TorqueCurrentFOC(0);
+
         turnMotor.burnFlash();
     }
 
@@ -101,7 +101,11 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getDriveVoltage() {
-        return driveVoltage;
+        return driveMotor.getMotorVoltage().getValueAsDouble();
+    }
+
+    public double getDriveCurrent() {
+        return driveCurrent;
     }
 
     public double getTurnVoltage() {
@@ -109,11 +113,11 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getDriveVelocity() {
-        return driveEncoder.getVelocity();
+        return driveMotor.getVelocity().getValueAsDouble() / Settings.Swerve.Encoder.Drive.VELOCITY_CONVERSION;
     }
 
     public double getTurnVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(turnEncoder.getVelocity() * 60);
+        return turnEncoder.getVelocity();
     }
 
     public Rotation2d getAngle() {
@@ -125,7 +129,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
+        return new SwerveModulePosition(driveMotor.getPosition().getValueAsDouble() / Settings.Swerve.Encoder.Drive.POSITION_CONVERSION, getAngle());
     }
 
     public SwerveModuleState getModuleState() {
@@ -135,8 +139,13 @@ public class SwerveModule extends SubsystemBase {
     /************************************************/
 
     public void setDriveVoltage(double voltage) {
-        driveVoltage = voltage;
         driveMotor.setVoltage(voltage);
+    }
+
+    public void setDriveCurrent(double current) {
+        driveCurrent = current;
+        currentFOC.withOutput(current);
+        driveMotor.setControl(currentFOC);
     }
 
     public void setTurnVoltage(double voltage) {
@@ -157,10 +166,7 @@ public class SwerveModule extends SubsystemBase {
         if (DriverStation.isAutonomous()) {
 
             if (driveSysID.get()) {
-                setTurnVoltage(
-                        turnController.update(Angle.kZero, Angle.fromRotation2d(getAbsoluteAngle())));
-            } else if (turnSysID.get()) {
-                setDriveVoltage(driveController.update(0, getDriveVelocity()));
+                setTurnVoltage(turnController.update(Angle.kZero, Angle.fromRotation2d(getAbsoluteAngle())));
             }
 
         } else {
