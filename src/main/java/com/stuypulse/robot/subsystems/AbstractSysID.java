@@ -15,6 +15,7 @@ import com.stuypulse.robot.subsystems.elevator.ElevatorSysID;
 import com.stuypulse.robot.subsystems.flywheel.FlywheelSysID;
 import com.stuypulse.robot.subsystems.motor.MotorSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveDriveSysID;
+import com.stuypulse.robot.subsystems.swerve.SwerveDriveVoltageSysID;
 import com.stuypulse.robot.subsystems.swerve.SwerveTurnSysID;
 import com.stuypulse.robot.subsystems.tank.TankSysID;
 
@@ -28,7 +29,7 @@ public abstract class AbstractSysID extends SubsystemBase {
     static {
         switch (ROUTINE) {
             case SWERVE_DRIVE:
-                instance = new SwerveDriveSysID();
+                instance = new SwerveDriveVoltageSysID();
                 break;
             case SWERVE_TURN:
                 instance = new SwerveTurnSysID();

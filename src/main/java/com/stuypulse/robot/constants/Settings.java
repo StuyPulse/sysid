@@ -35,7 +35,7 @@ public interface Settings {
             MOTOR
         }
 
-        public Mechanism ROUTINE = Mechanism.MOTOR;
+        public Mechanism ROUTINE = Mechanism.SWERVE_DRIVE;
     }
 
     public interface Flywheel {
@@ -142,13 +142,13 @@ public interface Settings {
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(16.435547);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-172.880859);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-91.406250);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(22.939453);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 

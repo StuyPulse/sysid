@@ -62,6 +62,6 @@ public interface Ports {
     }
 
     public interface Motor {
-        int MOTOR = 1;
+        int MOTOR = 5;
     }
 }

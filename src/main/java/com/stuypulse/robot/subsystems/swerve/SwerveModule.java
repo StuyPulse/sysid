@@ -84,12 +84,12 @@ public class SwerveModule extends SubsystemBase {
 
         driveSysID = new SmartBoolean("Swerve/Modules/Config/Drive SysID Enabled", false);
         turnSysID = new SmartBoolean("Swerve/Modules/Config/Turn SysID Enabled", false);
+        
+        currentFOC = new TorqueCurrentFOC(0);
 
         setDriveVoltage(0);
         setDriveCurrent(0);
         setTurnVoltage(0);
-
-        currentFOC = new TorqueCurrentFOC(0);
 
         turnMotor.burnFlash();
     }
@@ -187,5 +187,8 @@ public class SwerveModule extends SubsystemBase {
         SmartDashboard.putNumber(
                 "Swerve/Modules/" + id + "/Raw Encoder Angle",
                 Units.rotationsToDegrees(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()));
+        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Torque Current", driveMotor.getTorqueCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Supply Current", driveMotor.getSupplyCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Target Current", driveCurrent);
     }
 }

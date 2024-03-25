@@ -61,10 +61,10 @@ public class SysIdRoutine extends SysIdRoutineLog {
 
   /** Hardware-independent configuration for a SysId test routine. */
   public static class Config {
-    /** The voltage ramp rate used for quasistatic test routines. */
+    /** The amperage ramp rate used for quasistatic test routines. */
     public final Measure<Velocity<Current>> m_rampRate;
 
-    /** The step voltage output used for dynamic test routines. */
+    /** The step amperage output used for dynamic test routines. */
     public final Measure<Current> m_stepCurrent;
 
     /** Safety timeout for the test routine commands. */
@@ -76,10 +76,10 @@ public class SysIdRoutine extends SysIdRoutineLog {
     /**
      * Create a new configuration for a SysId test routine.
      *
-     * @param rampRate The voltage ramp rate used for quasistatic test routines. Defaults to 1 volt
+     * @param rampRate The amperage ramp rate used for quasistatic test routines. Defaults to 2 amps
      *     per second if left null.
-     * @param stepCurrent The step voltage output used for dynamic test routines. Defaults to 7
-     *     volts if left null.
+     * @param stepAmperage The step amperage output used for dynamic test routines. Defaults to 60
+     *     amps if left null.
      * @param timeout Safety timeout for the test routine commands. Defaults to 10 seconds if left
      *     null.
      * @param recordState Optional handle for recording test state in a third-party logging
@@ -88,38 +88,38 @@ public class SysIdRoutine extends SysIdRoutineLog {
      */
     public Config(
         Measure<Velocity<Current>> rampRate,
-        Measure<Current> stepCurrent,
+        Measure<Current> stepAmperage,
         Measure<Time> timeout,
         Consumer<State> recordState) {
-      m_rampRate = rampRate != null ? rampRate : Amps.of(1).per(Seconds.of(1));
-      m_stepCurrent = stepCurrent != null ? stepCurrent : Amps.of(7);
-      m_timeout = timeout != null ? timeout : Seconds.of(10);
+      m_rampRate = rampRate != null ? rampRate : Amps.of(2).per(Seconds.of(1));
+      m_stepCurrent = stepAmperage != null ? stepAmperage : Amps.of(60);
+      m_timeout = timeout != null ? timeout : Seconds.of(30);
       m_recordState = recordState;
     }
 
     /**
      * Create a new configuration for a SysId test routine.
      *
-     * @param rampRate The voltage ramp rate used for quasistatic test routines. Defaults to 1 volt
+     * @param rampRate The amperage ramp rate used for quasistatic test routines. Defaults to 2 amps
      *     per second if left null.
-     * @param stepVoltage The step voltage output used for dynamic test routines. Defaults to 7
-     *     volts if left null.
-     * @param timeout Safety timeout for the test routine commands. Defaults to 10 seconds if left
+     * @param stepAmperage The step amperage output used for dynamic test routines. Defaults to 60
+     *     amps if left null.
+     * @param timeout Safety timeout for the test routine commands. Defaults to 30 seconds if left
      *     null.
      */
     public Config(
-        Measure<Velocity<Current>> rampRate, Measure<Current> stepVoltage, Measure<Time> timeout) {
-      this(rampRate, stepVoltage, timeout, null);
+        Measure<Velocity<Current>> rampRate, Measure<Current> stepAmperage, Measure<Time> timeout) {
+      this(rampRate, stepAmperage, timeout, null);
     }
 
     /**
      * Create a default configuration for a SysId test routine with all default settings.
      *
-     * <p>rampRate: 1 volt/sec
+     * <p>rampRate: 2 amps/sec
      *
-     * <p>stepVoltage: 7 volts
+     * <p>stepAmperage: 60 amps
      *
-     * <p>timeout: 10 seconds
+     * <p>timeout: 30 seconds
      */
     public Config() {
       this(null, null, null, null);
@@ -135,7 +135,7 @@ public class SysIdRoutine extends SysIdRoutineLog {
     public final Consumer<Measure<Current>> m_drive;
 
     /**
-     * Returns measured data (voltages, positions, velocities) of the mechanism motors during test
+     * Returns measured data (amperages, positions, velocities) of the mechanism motors during test
      * routines.
      */
     public final Consumer<SysIdRoutineLog> m_log;
@@ -153,7 +153,7 @@ public class SysIdRoutine extends SysIdRoutineLog {
      *     routines.
      * @param log Returns measured data of the mechanism motors during test routines. To return
      *     data, call `motor(string motorName)` on the supplied `SysIdRoutineLog` instance, and then
-     *     call one or more of the chainable logging handles (e.g. `voltage`) on the returned
+     *     call one or more of the chainable logging handles (e.g. `amperage`) on the returned
      *     `MotorLog`. Multiple motors can be logged in a single callback by calling `motor`
      *     multiple times.
      * @param subsystem The subsystem containing the motor(s) that is (or are) being characterized.
@@ -181,7 +181,7 @@ public class SysIdRoutine extends SysIdRoutineLog {
      *     routines.
      * @param log Returns measured data of the mechanism motors during test routines. To return
      *     data, call `motor(string motorName)` on the supplied `SysIdRoutineLog` instance, and then
-     *     call one or more of the chainable logging handles (e.g. `voltage`) on the returned
+     *     call one or more of the chainable logging handles (e.g. `amperage`) on the returned
      *     `MotorLog`. Multiple motors can be logged in a single callback by calling `motor`
      *     multiple times.
      * @param subsystem The subsystem containing the motor(s) that is (or are) being characterized.
