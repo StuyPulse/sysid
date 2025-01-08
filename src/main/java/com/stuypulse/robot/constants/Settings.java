@@ -90,6 +90,8 @@ public interface Settings {
 
     public interface Swerve {
 
+        String CANBUS = "*";
+
         double WIDTH = Units.inchesToMeters(26);
         double LENGTH = Units.inchesToMeters(26);
 
