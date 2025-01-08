@@ -12,42 +12,39 @@ import com.stuypulse.robot.constants.Ports;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 
 public class Elevator extends SubsystemBase {
 
-    private final CANSparkMax motor;
-    private final CANSparkMax motor2;
+    private final SparkMax motor;
+    private final SparkMax motor2;
     private final RelativeEncoder encoder;
 
     private double voltage;
 
     public Elevator() {
-        motor = new CANSparkMax(Ports.Elevator.MOTOR, MotorType.kBrushless);
-        motor.restoreFactoryDefaults();
+        motor = new SparkMax(Ports.Elevator.MOTOR, MotorType.kBrushless);
         encoder = motor.getEncoder();
 
-        motor2 = new CANSparkMax(Ports.Elevator.MOTOR2, MotorType.kBrushless);
-        motor2.follow(motor);
-        motor2.setInverted(true);
-
-        encoder.setPositionConversionFactor(POSITION_CONVERSION);
-        encoder.setVelocityConversionFactor(VELOCITY_CONVERSION);
+        motor2 = new SparkMax(Ports.Elevator.MOTOR2, MotorType.kBrushless);
+        SparkBaseConfig motor2Config = new SparkMaxConfig().follow(motor).inverted(true);
+        motor2.configure(motor2Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         voltage = 0;
-
-        motor.burnFlash();
-        motor2.burnFlash();
     }
 
     public double getVelocity() {
-        return encoder.getVelocity();
+        return encoder.getVelocity() * VELOCITY_CONVERSION;
     }
 
     public double getPosition() {
-        return encoder.getPosition();
+        return encoder.getPosition() * POSITION_CONVERSION;
     }
 
     public double getVoltage() {

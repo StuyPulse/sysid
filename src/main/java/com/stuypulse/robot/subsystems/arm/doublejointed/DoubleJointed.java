@@ -16,21 +16,26 @@ import com.stuypulse.stuylib.network.SmartBoolean;
 
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings.Arm.DoubleJointed.JointOne;
+import com.stuypulse.robot.constants.Settings.Arm.DoubleJointed.JointTwo;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class DoubleJointed extends SubsystemBase {
 
-    private final CANSparkMax jointOne;
+    private final SparkMax jointOne;
     private final RelativeEncoder jointOneEncoder;
     private final AngleController jointOneController;
 
-    private final CANSparkMax jointTwo;
+    private final SparkMax jointTwo;
     private final RelativeEncoder jointTwoEncoder;
     private final AngleController jointTwoController;
 
@@ -41,23 +46,21 @@ public class DoubleJointed extends SubsystemBase {
     private final SmartBoolean jointTwoRoutine;
 
     public DoubleJointed() {
-        jointOne = new CANSparkMax(Ports.Arm.JOINT_ONE, MotorType.kBrushless);
-        jointOne.restoreFactoryDefaults();
-        jointOneEncoder = jointOne.getEncoder();
+        jointOne = new SparkMax(Ports.Arm.JOINT_ONE, MotorType.kBrushless);
+        SparkBaseConfig jointOneConfig = new SparkMaxConfig();
+        jointOne.configure(jointOneConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        jointOneEncoder.setPositionConversionFactor(JointOne.POSITION_CONVERSION);
-        jointOneEncoder.setVelocityConversionFactor(JointOne.VELOCITY_CONVERSION);
+        jointOneEncoder = jointOne.getEncoder();
 
         jointOneController =
                 new AnglePIDController(JointOne.kP, JointOne.kI, JointOne.kD)
                         .add(new AngleArmFeedforward(JointOne.kG.get()));
 
-        jointTwo = new CANSparkMax(Ports.Arm.JOINT_TWO, MotorType.kBrushless);
-        jointTwo.restoreFactoryDefaults();
-        jointTwoEncoder = jointTwo.getEncoder();
+        jointTwo = new SparkMax(Ports.Arm.JOINT_TWO, MotorType.kBrushless);
+        SparkBaseConfig jointTwoConfig = new SparkMaxConfig();
+        jointOne.configure(jointTwoConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        jointTwoEncoder.setPositionConversionFactor(JointOne.POSITION_CONVERSION);
-        jointTwoEncoder.setVelocityConversionFactor(JointOne.VELOCITY_CONVERSION);
+        jointTwoEncoder = jointTwo.getEncoder();
 
         jointTwoController =
                 new AnglePIDController(JointTwo.kP, JointTwo.kI, JointTwo.kD)
@@ -68,17 +71,14 @@ public class DoubleJointed extends SubsystemBase {
 
         jointOneRoutine = new SmartBoolean("Double Jointed/Joint One Routine", false);
         jointTwoRoutine = new SmartBoolean("Double Jointed/Joint Two Routine", false);
-
-        jointOne.burnFlash();
-        jointTwo.burnFlash();
     }
 
     public double getJointOneVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(jointOneEncoder.getVelocity());
+        return Units.rotationsPerMinuteToRadiansPerSecond(jointOneEncoder.getVelocity()) * JointOne.VELOCITY_CONVERSION;
     }
 
     public double getJointOnePosition() {
-        return Units.rotationsToRadians(jointTwoEncoder.getPosition());
+        return Units.rotationsToRadians(jointTwoEncoder.getPosition()) * JointOne.POSITION_CONVERSION;
     }
 
     public double getJointOneVoltage() {
@@ -91,11 +91,11 @@ public class DoubleJointed extends SubsystemBase {
     }
 
     public double getJointTwoVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(jointOneEncoder.getVelocity());
+        return Units.rotationsPerMinuteToRadiansPerSecond(jointOneEncoder.getVelocity()) * JointTwo.VELOCITY_CONVERSION;
     }
 
     public double getJointTwoPosition() {
-        return Units.rotationsToRadians(jointTwoEncoder.getPosition());
+        return Units.rotationsToRadians(jointTwoEncoder.getPosition()) * JointTwo.POSITION_CONVERSION;
     }
 
     public double getJointTwoVoltage() {

@@ -2,9 +2,7 @@ package com.stuypulse.robot.subsystems.tank;
 
 import com.stuypulse.robot.subsystems.AbstractSysID;
 
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -20,7 +18,7 @@ public class TankSysID extends AbstractSysID {
                 new SysIdRoutine(
                         new SysIdRoutine.Config(),
                         new SysIdRoutine.Mechanism(
-                                (Measure<Voltage> voltage) -> {
+                                (voltage) -> {
                                     tankDrive.setVoltage(voltage.in(Units.Volts));
                                 },
                                 (log) -> {

@@ -6,13 +6,12 @@
 
 package com.stuypulse.robot.constants;
 
+import com.pathplanner.lib.config.PIDConstants;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-
-import com.pathplanner.lib.util.PIDConstants;
 
 /*-
  * File containing tunable settings for every subsystem on the robot.

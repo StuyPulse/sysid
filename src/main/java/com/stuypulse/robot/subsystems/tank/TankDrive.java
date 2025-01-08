@@ -2,19 +2,24 @@ package com.stuypulse.robot.subsystems.tank;
 
 import static com.stuypulse.robot.constants.Settings.TankDrive.*;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
 import com.stuypulse.robot.constants.Ports;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TankDrive extends SubsystemBase {
 
-    private final CANSparkMax frontLeft;
-    private final CANSparkMax backLeft;
-    private final CANSparkMax frontRight;
-    private final CANSparkMax backRight;
+    private final SparkMax frontLeft;
+    private final SparkMax backLeft;
+    private final SparkMax frontRight;
+    private final SparkMax backRight;
     
     private final RelativeEncoder leftEncoder;
     private final RelativeEncoder rightEncoder;
@@ -22,41 +27,34 @@ public class TankDrive extends SubsystemBase {
     private double voltage;
 
     public TankDrive() {
-        frontLeft = new CANSparkMax(Ports.TankDrive.FRONT_LEFT_MOTOR, MotorType.kBrushless);
-        backLeft = new CANSparkMax(Ports.TankDrive.BACK_LEFT_MOTOR, MotorType.kBrushless);
-        frontRight = new CANSparkMax(Ports.TankDrive.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-        backRight = new CANSparkMax(Ports.TankDrive.BACK_RIGHT_MOTOR, MotorType.kBrushless);
-        
-        frontLeft.restoreFactoryDefaults();
-        backLeft.restoreFactoryDefaults();
-        frontRight.restoreFactoryDefaults();
-        backRight.restoreFactoryDefaults();
+        frontLeft = new SparkMax(Ports.TankDrive.FRONT_LEFT_MOTOR, MotorType.kBrushless);
+        SparkBaseConfig frontLeftConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake);
+        frontLeft.configure(frontLeftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        backLeft.follow(frontLeft);
-        backRight.follow(frontRight);
+        backLeft = new SparkMax(Ports.TankDrive.BACK_LEFT_MOTOR, MotorType.kBrushless);
+        SparkBaseConfig backLeftConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake).follow(frontLeft);
+        backLeft.configure(backLeftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        frontRight = new SparkMax(Ports.TankDrive.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+        SparkBaseConfig frontRightConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake);
+        frontRight.configure(frontRightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        
+        backRight = new SparkMax(Ports.TankDrive.BACK_RIGHT_MOTOR, MotorType.kBrushless);
+        SparkBaseConfig backRightConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake).follow(frontRight);
+        backRight.configure(backRightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         leftEncoder = frontLeft.getEncoder();
         rightEncoder = frontRight.getEncoder();
 
-        leftEncoder.setPositionConversionFactor(POSITION_CONVERSION);
-        leftEncoder.setVelocityConversionFactor(VELOCITY_CONVERSION);
-        rightEncoder.setPositionConversionFactor(POSITION_CONVERSION);
-        rightEncoder.setVelocityConversionFactor(VELOCITY_CONVERSION);
-
         voltage = 0;
-
-        frontLeft.burnFlash();
-        backLeft.burnFlash();
-        frontRight.burnFlash();
-        backRight.burnFlash();
     }
 
     public double getVelocity() {
-        return (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2;
+        return (leftEncoder.getVelocity() * VELOCITY_CONVERSION + rightEncoder.getVelocity() * VELOCITY_CONVERSION) / 2;
     }
 
     public double getPosition() {
-        return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+        return (leftEncoder.getPosition() * POSITION_CONVERSION + rightEncoder.getPosition() * POSITION_CONVERSION) / 2;
     }
 
     public double getVoltage() {
