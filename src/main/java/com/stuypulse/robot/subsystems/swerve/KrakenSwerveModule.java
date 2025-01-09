@@ -34,26 +34,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
 public class KrakenSwerveModule extends SubsystemBase {
 
     private final String id;
     private final Rotation2d angleOffset;
 
     private final TalonFX driveMotor;
-    private final RelativeEncoder driveEncoder;
     private final Controller driveController;
 
     private final TalonFX turnMotor;
-    private final RelativeEncoder turnEncoder;
     private final CANcoder turnAbsoluteEncoder;
     private final AngleController turnController;
 
@@ -72,7 +61,6 @@ public class KrakenSwerveModule extends SubsystemBase {
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
         driveMotor.getConfigurator().apply(driveConfig);
 
-        driveEncoder = driveMotor.;
         driveController =
                 new PIDController(Drive.kP, Drive.kI, Drive.kD)
                         .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
@@ -110,15 +98,15 @@ public class KrakenSwerveModule extends SubsystemBase {
     }
 
     public double getDriveVelocity() {
-        return driveEncoder.getVelocity() * Encoder.Drive.VELOCITY_CONVERSION;
+        return driveMotor.getVelocity().getValueAsDouble() * Encoder.Drive.VELOCITY_CONVERSION;
     }
 
     public double getTurnVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(turnEncoder.getVelocity() * Encoder.Turn.VELOCITY_CONVERSION * 60);
+        return Units.rotationsPerMinuteToRadiansPerSecond(turnMotor.getVelocity().getValueAsDouble() * Encoder.Turn.VELOCITY_CONVERSION * 60);
     }
 
     public Rotation2d getAngle() {
-        return Rotation2d.fromRotations(turnEncoder.getPosition() * Encoder.Turn.POSITION_CONVERSION);
+        return Rotation2d.fromRotations(turnMotor.getPosition().getValueAsDouble() * Encoder.Turn.POSITION_CONVERSION);
     }
 
     public Rotation2d getAbsoluteAngle() {
@@ -126,7 +114,7 @@ public class KrakenSwerveModule extends SubsystemBase {
     }
 
     public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(driveEncoder.getPosition() * Encoder.Drive.POSITION_CONVERSION, getAngle());
+        return new SwerveModulePosition(driveMotor.getPosition().getValueAsDouble() * Encoder.Drive.POSITION_CONVERSION, getAngle());
     }
 
     public SwerveModuleState getModuleState() {
