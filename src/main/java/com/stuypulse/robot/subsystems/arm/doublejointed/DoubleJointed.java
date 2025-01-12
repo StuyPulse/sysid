@@ -48,6 +48,8 @@ public class DoubleJointed extends SubsystemBase {
     public DoubleJointed() {
         jointOne = new SparkMax(Ports.Arm.JOINT_ONE, MotorType.kBrushless);
         SparkBaseConfig jointOneConfig = new SparkMaxConfig();
+        jointOneConfig.encoder.positionConversionFactor(JointOne.POSITION_CONVERSION);
+        jointOneConfig.encoder.velocityConversionFactor(JointOne.VELOCITY_CONVERSION);
         jointOne.configure(jointOneConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         jointOneEncoder = jointOne.getEncoder();
@@ -58,6 +60,8 @@ public class DoubleJointed extends SubsystemBase {
 
         jointTwo = new SparkMax(Ports.Arm.JOINT_TWO, MotorType.kBrushless);
         SparkBaseConfig jointTwoConfig = new SparkMaxConfig();
+        jointTwoConfig.encoder.positionConversionFactor(JointTwo.POSITION_CONVERSION);
+        jointTwoConfig.encoder.velocityConversionFactor(JointTwo.VELOCITY_CONVERSION);
         jointOne.configure(jointTwoConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         jointTwoEncoder = jointTwo.getEncoder();
@@ -74,11 +78,11 @@ public class DoubleJointed extends SubsystemBase {
     }
 
     public double getJointOneVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(jointOneEncoder.getVelocity()) * JointOne.VELOCITY_CONVERSION;
+        return Units.rotationsPerMinuteToRadiansPerSecond(jointOneEncoder.getVelocity());
     }
 
     public double getJointOnePosition() {
-        return Units.rotationsToRadians(jointTwoEncoder.getPosition()) * JointOne.POSITION_CONVERSION;
+        return Units.rotationsToRadians(jointTwoEncoder.getPosition());
     }
 
     public double getJointOneVoltage() {
@@ -91,11 +95,11 @@ public class DoubleJointed extends SubsystemBase {
     }
 
     public double getJointTwoVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(jointOneEncoder.getVelocity()) * JointTwo.VELOCITY_CONVERSION;
+        return Units.rotationsPerMinuteToRadiansPerSecond(jointOneEncoder.getVelocity());
     }
 
     public double getJointTwoPosition() {
-        return Units.rotationsToRadians(jointTwoEncoder.getPosition()) * JointTwo.POSITION_CONVERSION;
+        return Units.rotationsToRadians(jointTwoEncoder.getPosition());
     }
 
     public double getJointTwoVoltage() {

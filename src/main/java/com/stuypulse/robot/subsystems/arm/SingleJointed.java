@@ -31,6 +31,8 @@ public class SingleJointed extends SubsystemBase {
     public SingleJointed() {
         motor = new SparkMax(Ports.Arm.JOINT_ONE, MotorType.kBrushless);
         SparkBaseConfig config = new SparkMaxConfig();
+        config.encoder.positionConversionFactor(POSITION_CONVERSION);
+        config.encoder.velocityConversionFactor(VELOCITY_CONVERSION);
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         encoder = motor.getEncoder();
 
@@ -38,11 +40,11 @@ public class SingleJointed extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(encoder.getVelocity()) * POSITION_CONVERSION;
+        return Units.rotationsPerMinuteToRadiansPerSecond(encoder.getVelocity());
     }
 
     public double getPosition() {
-        return Units.rotationsToRadians(encoder.getPosition()) * VELOCITY_CONVERSION;
+        return Units.rotationsToRadians(encoder.getPosition());
     }
 
     public double getVoltage() {

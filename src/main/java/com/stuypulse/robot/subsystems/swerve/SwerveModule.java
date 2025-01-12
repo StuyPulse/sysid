@@ -6,6 +6,8 @@
 
 package com.stuypulse.robot.subsystems.swerve;
 
+import static com.stuypulse.robot.constants.Settings.Arm.SingleJointed.POSITION_CONVERSION;
+import static com.stuypulse.robot.constants.Settings.Arm.SingleJointed.VELOCITY_CONVERSION;
 import static com.stuypulse.robot.constants.Settings.Swerve.*;
 
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -64,7 +66,10 @@ public class SwerveModule extends SubsystemBase {
         this.angleOffset = angleOffset;
 
         driveMotor = new SparkMax(driveID, MotorType.kBrushless);
-        SparkBaseConfig driveConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake);
+        SparkBaseConfig driveConfig = new SparkMaxConfig();
+        driveConfig.idleMode(IdleMode.kBrake);
+        driveConfig.encoder.positionConversionFactor(Encoder.Drive.POSITION_CONVERSION);
+        driveConfig.encoder.velocityConversionFactor(Encoder.Drive.VELOCITY_CONVERSION);
         driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         driveEncoder = driveMotor.getEncoder();
@@ -73,7 +78,10 @@ public class SwerveModule extends SubsystemBase {
                         .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
 
         turnMotor = new SparkMax(turnID, MotorType.kBrushless);
-        SparkBaseConfig turnConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake);
+        SparkBaseConfig turnConfig = new SparkMaxConfig();
+        turnConfig.idleMode(IdleMode.kBrake);
+        turnConfig.encoder.positionConversionFactor(Encoder.Turn.POSITION_CONVERSION);
+        turnConfig.encoder.velocityConversionFactor(Encoder.Turn.VELOCITY_CONVERSION);
         turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         turnEncoder = turnMotor.getEncoder();
@@ -105,15 +113,15 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getDriveVelocity() {
-        return driveEncoder.getVelocity() * Encoder.Drive.VELOCITY_CONVERSION;
+        return driveEncoder.getVelocity();
     }
 
     public double getTurnVelocity() {
-        return Units.rotationsPerMinuteToRadiansPerSecond(turnEncoder.getVelocity() * Encoder.Turn.VELOCITY_CONVERSION * 60);
+        return Units.rotationsPerMinuteToRadiansPerSecond(turnEncoder.getVelocity() * 60);
     }
 
     public Rotation2d getAngle() {
-        return Rotation2d.fromRotations(turnEncoder.getPosition() * Encoder.Turn.POSITION_CONVERSION);
+        return Rotation2d.fromRotations(turnEncoder.getPosition());
     }
 
     public Rotation2d getAbsoluteAngle() {
@@ -121,7 +129,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(driveEncoder.getPosition() * Encoder.Drive.POSITION_CONVERSION, getAngle());
+        return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
     }
 
     public SwerveModuleState getModuleState() {

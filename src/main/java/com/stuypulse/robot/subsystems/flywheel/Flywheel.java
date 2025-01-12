@@ -30,6 +30,8 @@ public class Flywheel extends SubsystemBase {
     public Flywheel() {
         motor = new SparkMax(Ports.Flywheel.MOTOR, MotorType.kBrushless);
         SparkBaseConfig config = new SparkMaxConfig();
+        config.encoder.positionConversionFactor(POSITION_CONVERSION);
+        config.encoder.velocityConversionFactor(VELOCITY_CONVERSION);
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         encoder = motor.getEncoder();
 
@@ -37,11 +39,11 @@ public class Flywheel extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return encoder.getVelocity() * VELOCITY_CONVERSION;
+        return encoder.getVelocity();
     }
 
     public double getPosition() {
-        return encoder.getPosition() * POSITION_CONVERSION;
+        return encoder.getPosition();
     }
 
     public double getVoltage() {
