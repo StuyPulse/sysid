@@ -33,7 +33,7 @@ public interface Settings {
             DOUBLE_JOINTED_ARM_JOINT_TWO
         }
 
-        public Mechanism ROUTINE = Mechanism.SWERVE_DRIVE;
+        public Mechanism ROUTINE = Mechanism.SWERVE_TURN;
     }
 
     public interface Flywheel {
@@ -103,23 +103,23 @@ public interface Settings {
                 new SmartNumber("Swerve/Maximum module turn (rad per s)", 6.28);
 
         public interface Turn {
-            SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 6.0);
+            SmartNumber kP = new SmartNumber("Swerve/Turn/kP", 3.5);
             SmartNumber kI = new SmartNumber("Swerve/Turn/kI", 0.0);
-            SmartNumber kD = new SmartNumber("Swerve/Turn/kD", 0.15);
+            SmartNumber kD = new SmartNumber("Swerve/Turn/kD", 0.1);
 
-            SmartNumber kS = new SmartNumber("Swerve/Turn/kS", 0.44076);
-            SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 0.0056191);
-            SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 0.00042985);
+            SmartNumber kS = new SmartNumber("Swerve/Turn/kS", 0.0);
+            SmartNumber kV = new SmartNumber("Swerve/Turn/kV", 0.0);
+            SmartNumber kA = new SmartNumber("Swerve/Turn/kA", 0.0);
         }
 
         public interface Drive {
-            SmartNumber kP = new SmartNumber("Swerve/Drive/kP", 0.00019162);
+            SmartNumber kP = new SmartNumber("Swerve/Drive/kP", 0.0);
             SmartNumber kI = new SmartNumber("Swerve/Drive/kI", 0.0);
             SmartNumber kD = new SmartNumber("Swerve/Drive/kD", 0.0);
 
-            SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0.2021);
-            SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 0.0017542);
-            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0.00013496);
+            SmartNumber kS = new SmartNumber("Swerve/Drive/kS", 0.0);
+            SmartNumber kV = new SmartNumber("Swerve/Drive/kV", 0.0);
+            SmartNumber kA = new SmartNumber("Swerve/Drive/kA", 0.0);
         }
 
         public interface Motion {

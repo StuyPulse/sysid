@@ -27,12 +27,6 @@ public class SwerveDriveSysID extends AbstractSysID {
         modules =
                 new SwerveModule[] {
                     new SwerveModule(
-                            FrontRight.ID,
-                            FrontRight.ABSOLUTE_OFFSET,
-                            Ports.Swerve.FrontRight.TURN,
-                            Ports.Swerve.FrontRight.DRIVE,
-                            Ports.Swerve.FrontRight.ENCODER),
-                    new SwerveModule(
                             FrontLeft.ID,
                             FrontLeft.ABSOLUTE_OFFSET,
                             Ports.Swerve.FrontLeft.TURN,
@@ -49,7 +43,13 @@ public class SwerveDriveSysID extends AbstractSysID {
                             BackRight.ABSOLUTE_OFFSET,
                             Ports.Swerve.BackRight.TURN,
                             Ports.Swerve.BackRight.DRIVE,
-                            Ports.Swerve.BackRight.ENCODER)
+                            Ports.Swerve.BackRight.ENCODER),
+                    new SwerveModule(
+                    FrontRight.ID,
+                    FrontRight.ABSOLUTE_OFFSET,
+                    Ports.Swerve.FrontRight.TURN,
+                    Ports.Swerve.FrontRight.DRIVE,
+                    Ports.Swerve.FrontRight.ENCODER)
                 };
 
         this.driveRoutine =

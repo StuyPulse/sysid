@@ -24,6 +24,7 @@ import com.stuypulse.robot.constants.Settings.Swerve.Drive;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -88,8 +89,8 @@ public class SwerveModule extends SubsystemBase {
         turnAbsoluteEncoder = new CANcoder(encoderID);
         turnController =
                 new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
-                        .setSetpointFilter(new ARateLimit(MAX_MODULE_TURN))
-                        .setOutputFilter(x -> -x);
+                        .setSetpointFilter(new ARateLimit(MAX_MODULE_TURN));
+                        // .setOutputFilter(x -> -x);
 
         driveSysID = new SmartBoolean("Swerve/Modules/Config/Drive SysID Enabled", false);
         turnSysID = new SmartBoolean("Swerve/Modules/Config/Turn SysID Enabled", false);
@@ -120,12 +121,13 @@ public class SwerveModule extends SubsystemBase {
         return Units.rotationsPerMinuteToRadiansPerSecond(turnEncoder.getVelocity() * 60);
     }
 
-    public Rotation2d getAngle() {
-        return Rotation2d.fromRotations(turnEncoder.getPosition());
+    private Rotation2d getAbsolutePosition() {
+        return new Rotation2d(MathUtil.interpolate(-Math.PI, +Math.PI, (turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() + 1) / 2));
     }
 
-    public Rotation2d getAbsoluteAngle() {
-        return Rotation2d.fromRotations(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()).minus(angleOffset);
+    private Rotation2d getAngle() {
+        // not sure why we have to multiply this by 2
+        return new Rotation2d(getAbsolutePosition().minus(angleOffset).getRadians() * 2);
     }
 
     public SwerveModulePosition getModulePosition() {
@@ -162,13 +164,13 @@ public class SwerveModule extends SubsystemBase {
 
             if (driveSysID.get()) {
                 setTurnVoltage(
-                        turnController.update(Angle.kZero, Angle.fromRotation2d(getAbsoluteAngle())));
+                        turnController.update(Angle.kZero, Angle.fromRotation2d(getAngle())));
             } else if (turnSysID.get()) {
                 setDriveVoltage(driveController.update(0, getDriveVelocity()));
             }
 
         } else {
-            setTurnVoltage(turnController.update(Angle.kZero, Angle.fromRotation2d(getAbsoluteAngle())));
+            setTurnVoltage(turnController.update(Angle.kZero, Angle.fromRotation2d(getAngle())));
         }
 
         updateTelemetry();
@@ -180,7 +182,7 @@ public class SwerveModule extends SubsystemBase {
                 "Swerve/Modules/" + id + "/Turn Voltage", turnController.getOutput());
         SmartDashboard.putNumber(
                 "Swerve/Modules/" + id + "/Angle Error", turnController.getError().toDegrees());
-        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Angle", getAbsoluteAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Angle", getAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/Modules/" + id + "/Speed", getDriveVelocity());
         SmartDashboard.putNumber(
                 "Swerve/Modules/" + id + "/Raw Encoder Angle",
