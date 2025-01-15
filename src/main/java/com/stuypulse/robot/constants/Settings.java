@@ -92,8 +92,8 @@ public interface Settings {
 
         String CANBUS = "*";
 
-        double WIDTH = Units.inchesToMeters(26);
-        double LENGTH = Units.inchesToMeters(26);
+        double WIDTH = Units.inchesToMeters(22.213);
+        double LENGTH = Units.inchesToMeters(22.213);
 
         SmartNumber MODULE_VELOCITY_DEADBAND =
                 new SmartNumber("Swerve/Module velocity deadband (m per s)", 0.02);
@@ -123,47 +123,55 @@ public interface Settings {
         }
 
         public interface Motion {
-
             PIDConstants XY = new PIDConstants(0.7, 0, 0.02);
             PIDConstants THETA = new PIDConstants(10, 0, 0.1);
         }
 
         public interface FrontRight {
             String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-153.632812 + 180);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-85.913086);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(147.919922 + 180);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(24.785156);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(73.125 + 180);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(26.762695);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-2.02184 + 180);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-23.686523);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
 
         public interface Encoder {
             public interface Drive {
-                double WHEEL_DIAMETER = Units.inchesToMeters(4);
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
                 double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
-                double GEAR_RATIO = 1.0 / 6.12;
-
-                double POSITION_CONVERSION = WHEEL_CIRCUMFERENCE * GEAR_RATIO / 1000;
+    
+                public interface Stages {
+                    // input / output
+                    double FIRST = 16.0 / 48.0;
+                    double SECOND = 28.0 / 16.0;
+                    double THIRD = 15.0 / 60.0;
+                }
+    
+                double GEAR_RATIO = Stages.FIRST * Stages.SECOND * Stages.THIRD;
+    
+                double POSITION_CONVERSION = WHEEL_CIRCUMFERENCE * GEAR_RATIO;
                 double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
             }
-
+    
             public interface Turn {
-                double POSITION_CONVERSION = 21.4285714286;
+                double GEAR_RATIO = 1.0 / 12.8;
+                double POSITION_CONVERSION = GEAR_RATIO * 2 * Math.PI;
                 double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
             }
         }
