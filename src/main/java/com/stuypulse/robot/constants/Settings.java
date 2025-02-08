@@ -33,7 +33,7 @@ public interface Settings {
             DOUBLE_JOINTED_ARM_JOINT_TWO
         }
 
-        public Mechanism ROUTINE = Mechanism.SWERVE_TURN;
+        public Mechanism ROUTINE = Mechanism.SWERVE_DRIVE;
     }
 
     public interface Flywheel {
@@ -90,7 +90,7 @@ public interface Settings {
 
     public interface Swerve {
 
-        String CANBUS = "*";
+        String DRIVE_CANBUS = "Swerve Drive Drive";
 
         double WIDTH = Units.inchesToMeters(22.213);
         double LENGTH = Units.inchesToMeters(22.213);
@@ -127,28 +127,28 @@ public interface Settings {
             PIDConstants THETA = new PIDConstants(10, 0, 0.1);
         }
 
-        public interface FrontRight {
-            String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-85.913086);
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
-        }
-
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(24.785156);
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(-0.149902);
+            Translation2d MODULE_OFFSET = new Translation2d(LENGTH * +0.5, WIDTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(26.762695);
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(0.270752);
+            Translation2d MODULE_OFFSET = new Translation2d(LENGTH * -0.5, WIDTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-23.686523);
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(0.113037);
+            Translation2d MODULE_OFFSET = new Translation2d(LENGTH * -0.5, WIDTH * -0.5);
+        }
+
+        public interface FrontRight {
+            String ID = "Front Right";
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromRotations(-0.441162);
+            Translation2d MODULE_OFFSET = new Translation2d(LENGTH * +0.5, WIDTH * -0.5);
         }
 
         public interface Encoder {

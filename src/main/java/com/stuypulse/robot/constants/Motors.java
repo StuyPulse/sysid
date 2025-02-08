@@ -9,6 +9,17 @@ package com.stuypulse.robot.constants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -77,6 +88,34 @@ public interface Motors {
             motor.setInverted(INVERTED);
             motor.setNeutralMode(NEUTRAL_MODE);
             motor.configOpenloopRamp(OPEN_LOOP_RAMP_RATE);
+        }
+    }
+
+    public interface Swerve {
+        public interface Turn {
+            SparkBaseConfig motorConfig = new SparkMaxConfig().inverted(true).smartCurrentLimit(200).openLoopRampRate(0.25).idleMode(IdleMode.kBrake);
+        }
+        public interface Drive {
+            Slot0Configs slot0Configs = new Slot0Configs();
+            
+            MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
+                .withInverted(InvertedValue.Clockwise_Positive)
+                .withNeutralMode(NeutralModeValue.Brake);
+
+            ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs()
+                .withTorqueClosedLoopRampPeriod(0.25);
+            
+            CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(65);
+
+            FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Constants.Swerve.Encoder.Drive.POSITION_CONVERSION);
+
+            TalonFXConfiguration motorConfig = new TalonFXConfiguration()
+                .withSlot0(slot0Configs)
+                .withMotorOutput(motorOutputConfigs)
+                .withClosedLoopRamps(closedLoopRampsConfigs)
+                .withCurrentLimits(currentLimitsConfigs)    
+                .withFeedback(feedbackConfigs);
         }
     }
 }

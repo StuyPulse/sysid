@@ -24,7 +24,7 @@ import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.streams.angles.filters.ARateLimit;
-
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Swerve.Drive;
 import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
 import com.stuypulse.robot.constants.Settings.Swerve.Turn;
@@ -59,7 +59,7 @@ public class KrakenSwerveModule extends SubsystemBase {
         this.id = id;
         this.angleOffset = angleOffset;
 
-        driveMotor = new TalonFX(driveID, CANBUS);
+        driveMotor = new TalonFX(driveID, Settings.Swerve.DRIVE_CANBUS);
         TalonFXConfiguration driveConfig = new TalonFXConfiguration()
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
         driveMotor.getConfigurator().apply(driveConfig);
@@ -68,7 +68,7 @@ public class KrakenSwerveModule extends SubsystemBase {
                 new PIDController(Drive.kP, Drive.kI, Drive.kD)
                         .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
 
-        turnMotor = new TalonFX(turnID, CANBUS);
+        turnMotor = new TalonFX(turnID, Settings.Swerve.DRIVE_CANBUS);
         TalonFXConfiguration turnConfig = new TalonFXConfiguration()
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
         driveMotor.getConfigurator().apply(turnConfig);

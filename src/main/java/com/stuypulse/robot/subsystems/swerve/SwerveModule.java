@@ -6,11 +6,19 @@
 
 package com.stuypulse.robot.subsystems.swerve;
 
-import static com.stuypulse.robot.constants.Settings.Arm.SingleJointed.POSITION_CONVERSION;
-import static com.stuypulse.robot.constants.Settings.Arm.SingleJointed.VELOCITY_CONVERSION;
-import static com.stuypulse.robot.constants.Settings.Swerve.*;
-
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.stuypulse.robot.constants.Settings.Swerve.Drive;
+import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
+import static com.stuypulse.robot.constants.Settings.Swerve.MAX_MODULE_TURN;
+import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 import com.stuypulse.stuylib.control.Controller;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
@@ -20,11 +28,6 @@ import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.streams.angles.filters.ARateLimit;
 
-import com.stuypulse.robot.constants.Settings.Swerve.Drive;
-import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
-import com.stuypulse.robot.constants.Settings.Swerve.Turn;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -32,15 +35,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class SwerveModule extends SubsystemBase {
 
@@ -89,8 +83,8 @@ public class SwerveModule extends SubsystemBase {
         turnAbsoluteEncoder = new CANcoder(encoderID);
         turnController =
                 new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
-                        .setSetpointFilter(new ARateLimit(MAX_MODULE_TURN));
-                        // .setOutputFilter(x -> -x);
+                        .setSetpointFilter(new ARateLimit(MAX_MODULE_TURN))
+                        .setOutputFilter(x -> -x);
 
         driveSysID = new SmartBoolean("Swerve/Modules/Config/Drive SysID Enabled", false);
         turnSysID = new SmartBoolean("Swerve/Modules/Config/Turn SysID Enabled", false);
@@ -121,13 +115,12 @@ public class SwerveModule extends SubsystemBase {
         return Units.rotationsPerMinuteToRadiansPerSecond(turnEncoder.getVelocity() * 60);
     }
 
-    private Rotation2d getAbsolutePosition() {
-        return new Rotation2d(MathUtil.interpolate(-Math.PI, +Math.PI, (turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() + 1) / 2));
+    public Rotation2d getAngle() {
+        return Rotation2d.fromRotations(turnEncoder.getPosition());
     }
 
-    private Rotation2d getAngle() {
-        // not sure why we have to multiply this by 2
-        return new Rotation2d(getAbsolutePosition().minus(angleOffset).getRadians() * 2);
+    public Rotation2d getAbsoluteAngle() {
+        return Rotation2d.fromRotations(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()).minus(angleOffset);
     }
 
     public SwerveModulePosition getModulePosition() {
@@ -164,13 +157,13 @@ public class SwerveModule extends SubsystemBase {
 
             if (driveSysID.get()) {
                 setTurnVoltage(
-                        turnController.update(Angle.kZero, Angle.fromRotation2d(getAngle())));
+                        turnController.update(Angle.kZero, Angle.fromRotation2d(getAbsoluteAngle())));
             } else if (turnSysID.get()) {
                 setDriveVoltage(driveController.update(0, getDriveVelocity()));
             }
 
         } else {
-            setTurnVoltage(turnController.update(Angle.kZero, Angle.fromRotation2d(getAngle())));
+            setTurnVoltage(turnController.update(Angle.kZero, Angle.fromRotation2d(getAbsoluteAngle())));
         }
 
         updateTelemetry();
@@ -182,7 +175,7 @@ public class SwerveModule extends SubsystemBase {
                 "Swerve/Modules/" + id + "/Turn Voltage", turnController.getOutput());
         SmartDashboard.putNumber(
                 "Swerve/Modules/" + id + "/Angle Error", turnController.getError().toDegrees());
-        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Angle", getAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/Modules/" + id + "/Angle", getAbsoluteAngle().getDegrees());
         SmartDashboard.putNumber("Swerve/Modules/" + id + "/Speed", getDriveVelocity());
         SmartDashboard.putNumber(
                 "Swerve/Modules/" + id + "/Raw Encoder Angle",
