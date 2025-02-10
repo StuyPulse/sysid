@@ -108,7 +108,7 @@ public interface Motors {
             CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(65);
 
-            FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Constants.Swerve.Encoder.Drive.POSITION_CONVERSION);
+            FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Settings.Swerve.Encoder.Drive.POSITION_CONVERSION);
 
             TalonFXConfiguration motorConfig = new TalonFXConfiguration()
                 .withSlot0(slot0Configs)

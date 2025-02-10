@@ -89,7 +89,7 @@ public class KrakenDriveNeoTurnModuleImpl extends SubsystemBase {
     }
 
     public double getTurnVelocity() {
-        return pivotMotor.get();
+        return pivotEncoder.getVelocity().getValueAsDouble() * 2 * Math.PI;
     }
 
     public Rotation2d getAngle() {
